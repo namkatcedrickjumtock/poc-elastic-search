@@ -14,16 +14,6 @@ import (
 
 // elasticsearch specifications -> https://github.com/elastic/elasticsearch-specification
 
-type Recipe struct {
-	Title       string   `json:"title"`
-	Description string   `json:"description"`
-	Author      string   `json:"author"`
-	Date        string   `json:"date"`
-	Category    string   `json:"category"`
-	Tags        []string `json:"tags"`
-	Rating      float64  `json:"rating"`
-}
-
 func main() {
 	ctx := context.Background()
 
@@ -97,6 +87,7 @@ func main() {
 		},
 	}
 
+	// convert search term into json format.
 	jsonQuery, err := json.Marshal(query)
 	if err != nil {
 		log.Fatalf("Error marshaling json query: %s", err)
@@ -133,7 +124,7 @@ func AddDocuments(es *elasticsearch.Client, indexName string, data string, logge
 	return nil
 }
 
-// PutNewIndexMapping updates the mapping for an index
+// PutNewIndexMapping updates the mapping for an index, mappings are like models or schema (think mongodb schemas) to store data on elastic search but elastic search can infer the types automatically, meaning you must not define a type mappings before inserting data in elastic search.
 func PutNewIndexMapping(es *elasticsearch.Client, indexName string, logger zerolog.Logger) error {
 	mapping := map[string]interface{}{
 		"properties": map[string]interface{}{
